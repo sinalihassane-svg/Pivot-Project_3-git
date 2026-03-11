@@ -1,0 +1,75 @@
+:root {
+    --primary-red: #f1646e;
+    --glass-bg: rgba(255, 255, 255, 0.45);
+}
+
+body {
+    background: linear-gradient(135deg, #fff0f0 0%, #ffdfdf 100%);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header style Unini */
+.header-unini {
+    padding: 40px 10% 20px;
+    color: #2c3e50;
+}
+
+.header-unini h1 { font-size: 2.5rem; margin-bottom: 5px; }
+
+/* LA ZONE LIQUID GLASS */
+.glass-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px); /* L'effet de vitre givrée */
+    -webkit-backdrop-filter: blur(25px);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 40px 40px 0 0; /* Arrondi sur le haut */
+    padding: 60px 10%;
+    flex-grow: 1; /* Prend tout le reste de l'écran */
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
+}
+
+/* Questionnaire en grille aérée */
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #444;
+}
+
+input, select {
+    width: 100%;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.7);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.btn-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.btn-main {
+    background: var(--primary-red);
+    color: white;
+    border: none;
+    padding: 18px 45px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(241, 100, 110, 0.3);
+    transition: 0.3s;
+}

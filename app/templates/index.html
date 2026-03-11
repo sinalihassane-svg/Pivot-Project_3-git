@@ -1,0 +1,58 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<form method="POST" class="predict-form" style="display: block;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        
+        <div class="form-group">
+            <label>Âge de la patiente</label>
+            <input type="number" name="age" placeholder="ex: 25" required style="width: 100%;">
+        </div>
+
+        <div class="form-group">
+            <label>Consommation de tabac</label>
+            <select name="smokes" style="width: 100%;">
+                <option value="0">Non-fumeuse</option>
+                <option value="1">Fumeuse</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Années de tabagisme (si oui)</label>
+            <input type="number" name="smokes_years" value="0" style="width: 100%;">
+        </div>
+
+        <div class="form-group">
+            <label>Nombre de partenaires sexuels</label>
+            <input type="number" name="partners" placeholder="ex: 1" required style="width: 100%;">
+        </div>
+
+        <div class="form-group">
+            <label>Nombre de grossesses</label>
+            <input type="number" name="pregnancies" placeholder="ex: 0" required style="width: 100%;">
+        </div>
+
+        <div class="form-group">
+            <label>Contraceptifs hormonaux (années)</label>
+            <input type="number" name="hormonal_years" value="0" style="width: 100%;">
+        </div>
+
+        <div class="form-group">
+            <label>Diagnostic MST (précédent)</label>
+            <select name="stds" style="width: 100%;">
+                <option value="0">Aucun</option>
+                <option value="1">Oui</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Diagnostic de Cancer précédent</label>
+            <select name="cancer_prev" style="width: 100%;">
+                <option value="0">Non</option>
+                <option value="1">Oui</option>
+            </select>
+        </div>
+    </div>
+
+    <div style="text-align: center;">
+        <button type="submit" class="btn-main">LANCER LE DIAGNOSTIC COMPLET</button>
+    </div>
+</form>
