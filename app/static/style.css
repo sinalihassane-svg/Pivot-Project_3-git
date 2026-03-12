@@ -4,7 +4,7 @@
 }
 
 body {
-    background: url('/static/imgMed.jfif') no-repeat center center fixed; /* Correction chemin image */
+    background: url('/static/imgMed.jpg') no-repeat center center fixed; /* Correction chemin image */
     background-size: cover;
     justify-content: center;
     align-items: center;
