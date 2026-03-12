@@ -1,85 +1,74 @@
-
-#Importation des donnée
-import pandas as pd
-
-# Chemin d'accès local
-chemin = r"C:\Cycle Ingénieur\1A\S6\GitHub\cervical+cancer+risk+factors\risk_factors_cervical_cancer.csv"
-
-# Chargement du fichier CSV
-data = pd.read_csv(chemin, na_values='?')
-
-from sklearn.model_selection import train_test_split
-
-# Nettoyage temporaire des valeurs manquantes pour permettre l'exécution des algorithmes
-# (À remplacer par votre méthode d'imputation finale)
-
-
-# Séparation des caractéristiques et de la cible
-X = data.drop(columns=['Biopsy'])
-y = data['Biopsy']
-
-# Division : 80% entraînement, 20% test
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, stratify=y)
-
-from sklearn.preprocessing import RobustScaler
-
-# Initialisation de l'outil de mise à l'échelle robuste
-scaler = RobustScaler()
-
-# Apprentissage des paramètres sur les données d'entraînement et transformation
-X_train_scaled = scaler.fit_transform(X_train)
-
-# Transformation stricte des données de test (sans réapprentissage pour éviter la fuite de données)
-X_test_scaled = scaler.transform(X_test)
-
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
-
-# Initialisation et entraînement d'un modèle
-modele = RandomForestClassifier(random_state=42, class_weight='balanced')
-modele.fit(X_train_scaled, y_train)
-
-# Génération des prédictions sur les 20% de données de test
-y_pred = modele.predict(X_test_scaled)
-
-# Création de la matrice de confusion
-matrice_conf = confusion_matrix(y_test, y_pred)
-
-# Affichage visuel de la matrice de confusion
-disp = ConfusionMatrixDisplay(confusion_matrix=matrice_conf, display_labels=["Pas de risque", "À risque"])
-disp.plot(cmap='Blues')
-plt.title("Matrice de Confusion sur l'ensemble de Test (20%)")
-plt.show()
-
+#%%
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from imblearn.over_sampling import SMOTE
 
-def optimize_memory(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Optimise la mémoire du DataFrame en ajustant les types de données (ex: float64 -> float32).
-    """
-    start_mem = df.memory_usage().sum() / 1024**2
-    print(f'Mémoire initiale : {start_mem:.2f} MB')
+# 1. Récupération de la base de données
+chemin = r"C:\Cycle Ingénieur\1A\S6\GitHub\Pivot-Project_3-git\data\risk_factors_cervical_cancer.csv"
+df = pd.read_csv(chemin, na_values=["?"])
 
-    for col in df.columns:
-        col_type = df[col].dtype
+# Définition de la cible
+X = df.drop('Biopsy', axis=1)
+y = df['Biopsy']
 
-        if col_type != object:
-            c_min = df[col].min()
-            c_max = df[col].max()
-            
-            if str(col_type)[:3] == 'int':
-                if c_min > np.iinfo(np.int8).min and c_max < np.iinfo(np.int8).max:
-                    df[col] = df[col].astype(np.int8)
-                elif c_min > np.iinfo(np.int16).min and c_max < np.iinfo(np.int16).max:
-                    df[col] = df[col].astype(np.int16)
-                elif c_min > np.iinfo(np.int32).min and c_max < np.iinfo(np.int32).max:
-                    df[col] = df[col].astype(np.int32)
-            else:
-                if c_min > np.finfo(np.float32).min and c_max < np.finfo(np.float32).max:
-                    df[col] = df[col].astype(np.float32)
+# 2. Division en 80% entraînement et 20% test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-    end_mem = df.memory_usage().sum() / 1024**2
-    print(f'Mémoire finale : {end_mem:.2f} MB')
-    return df
+# 3. Retrait des colonnes avec >= 60% de valeurs manquantes
+seuil_col = 0.6 * len(X_train)
+colonnes_a_garder = X_train.columns[X_train.isna().sum() < seuil_col]
+X_train = X_train[colonnes_a_garder]
+X_test = X_test[colonnes_a_garder]
+
+# 4. Retrait des lignes avec >= 60% de valeurs manquantes
+seuil_ligne = 0.6 * len(X_train.columns)
+lignes_a_garder = X_train.isna().sum(axis=1) < seuil_ligne
+X_train = X_train[lignes_a_garder]
+y_train = y_train[lignes_a_garder]
+
+# 5. Détection et suppression des valeurs aberrantes (IQR) - CORRIGÉ
+# On calcule l'IQR et on filtre uniquement les colonnes où IQR > 0 
+# Cela évite d'éliminer les "1" dans les colonnes binaires (0/1)
+Q1 = X_train.quantile(0.25)
+Q3 = X_train.quantile(0.75)
+IQR = Q3 - Q1
+
+colonnes_a_filtrer = IQR[IQR > 0].index
+condition_iqr = ~((X_train[colonnes_a_filtrer] < (Q1[colonnes_a_filtrer] - 1.5 * IQR[colonnes_a_filtrer])) | \
+                  (X_train[colonnes_a_filtrer] > (Q3[colonnes_a_filtrer] + 1.5 * IQR[colonnes_a_filtrer]))).any(axis=1)
+
+X_train = X_train[condition_iqr]
+y_train = y_train[condition_iqr]
+
+# 6. Remplacement des valeurs manquantes par la médiane
+imputer = SimpleImputer(strategy='median')
+X_train_imputed = pd.DataFrame(imputer.fit_transform(X_train), columns=X_train.columns, index=X_train.index)
+X_test_imputed = pd.DataFrame(imputer.transform(X_test), columns=X_test.columns, index=X_test.index)
+
+# 7. Matrice de corrélation
+corr_matrix = X_train_imputed.corr().abs()
+upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+colonnes_a_supprimer = [col for col in upper.columns if any(upper[col] > 0.85)]
+
+X_train_imputed = X_train_imputed.drop(columns=colonnes_a_supprimer)
+X_test_imputed = X_test_imputed.drop(columns=colonnes_a_supprimer)
+
+# 8. Gestion du déséquilibre avec SMOTE - SÉCURISÉ
+# On s'assure que le nombre de voisins (k_neighbors) ne dépasse pas le nombre d'échantillons disponibles
+n_samples_minority = y_train.value_counts().min()
+k_neighbors = min(5, n_samples_minority - 1)
+
+if k_neighbors > 0:
+    smote = SMOTE(k_neighbors=k_neighbors, random_state=42)
+    X_train_balanced, y_train_balanced = smote.fit_resample(X_train_imputed, y_train)
+else:
+    X_train_balanced, y_train_balanced = X_train_imputed, y_train
+
+# 9. Normalisation des valeurs
+scaler = StandardScaler()
+X_train_final = pd.DataFrame(scaler.fit_transform(X_train_balanced), columns=X_train_imputed.columns)
+X_test_final = pd.DataFrame(scaler.transform(X_test_imputed), columns=X_test_imputed.columns)
+# %%
