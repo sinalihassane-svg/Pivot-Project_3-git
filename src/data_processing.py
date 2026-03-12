@@ -1,3 +1,4 @@
+
 #%%
 import pandas as pd
 import numpy as np
@@ -5,8 +6,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 # 1. Récupération de la base de données via l'URL
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00383/risk_factors_cervical_cancer.csv"
@@ -47,11 +46,7 @@ y_train = y_train[condition_iqr]
 
 # 6. Remplacement des valeurs manquantes par la médiane
 imputer = SimpleImputer(strategy='median')
-# La ligne imputer.fit_transform(X_train), il se passe deux choses.
-# D'abord, la méthode fit analyse chaque colonne de X_train et calcule la vraie médiane de ces données.
-# Elle mémorise ces valeurs. Ensuite, la méthode transform remplace les valeurs manquantes de X_train par ces médianes tout juste calculées.
 X_train_imputed = pd.DataFrame(imputer.fit_transform(X_train), columns=X_train.columns, index=X_train.index)
-#La méthode imputer.transform(X_test), l'algorithme récupère les médianes qu'il a apprises sur X_train et les utilise pour combler les valeurs manquantes de X_test.
 X_test_imputed = pd.DataFrame(imputer.transform(X_test), columns=X_test.columns, index=X_test.index)
 
 # 7. Matrice de corrélation
@@ -77,30 +72,4 @@ else:
 scaler = StandardScaler()
 X_train_final = pd.DataFrame(scaler.fit_transform(X_train_balanced), columns=X_train_imputed.columns)
 X_test_final = pd.DataFrame(scaler.transform(X_test_imputed), columns=X_test_imputed.columns)
-
-
-# %%
-# --- AJOUT DES VISUALISATIONS ---
-
-# 10. Visualisation des proportions de classes (Avant / Après SMOTE)
-# Création d'une figure avec deux sous-graphiques côte à côte
-fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-
-# Graphique 1 : Avant la gestion du déséquilibre (y_train)
-axes[0].pie(y_train.value_counts(), labels=["Sans risque (0)", "À risque (1)"], autopct='%1.1f%%', startangle=90, colors=['#66b3ff','#ff9999'])
-axes[0].set_title("Proportion des classes AVANT SMOTE")
-
-# Graphique 2 : Après la gestion du déséquilibre (y_train_balanced)
-axes[1].pie(y_train_balanced.value_counts(), labels=["Sans risque (0)", "À risque (1)"], autopct='%1.1f%%', startangle=90, colors=['#66b3ff','#ff9999'])
-axes[1].set_title("Proportion des classes APRÈS SMOTE")
-
-plt.tight_layout()
-plt.show()
-
-# 11. Visualisation de la matrice de corrélation
-plt.figure(figsize=(12, 10))
-# On génère une carte de chaleur (heatmap) à partir de la matrice de corrélation des données imputées
-sns.heatmap(X_train_imputed.corr(), annot=False, cmap='coolwarm', linewidths=0.5)
-plt.title("Matrice de corrélation des caractéristiques")
-plt.show()
 # %%
