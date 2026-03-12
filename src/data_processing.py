@@ -78,6 +78,7 @@ scaler = StandardScaler()
 X_train_final = pd.DataFrame(scaler.fit_transform(X_train_balanced), columns=X_train_imputed.columns)
 X_test_final = pd.DataFrame(scaler.transform(X_test_imputed), columns=X_test_imputed.columns)
 
+
 # %%
 # --- AJOUT DES VISUALISATIONS ---
 

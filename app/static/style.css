@@ -1,10 +1,10 @@
 :root {
     --primary-red: #f1646e;
-    --glass-bg: rgba(255, 255, 255, 0.45);
+    --glass-bg: rgba(255, 255, 255, 0.05);
 }
 
 body {
-    background: url('/static/imgMed.jfif') no-repeat center center fixed; /* Correction chemin image */
+    background: url('/static/cancer.jfif') no-repeat center center fixed; /* Correction chemin image */
     background-size: cover;
     justify-content: center;
     align-items: center;
