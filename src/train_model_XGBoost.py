@@ -1,4 +1,6 @@
 from xgboost import XGBClassifier
+import joblib
+import os
 from data_processing import X_train_final, y_train_balanced
 import joblib
 # Initialisation du modèle XGBoost
