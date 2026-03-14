@@ -1,15 +1,8 @@
-# Pivot-Project_3-git
- MEDICAL DECISION SUPPORT APPLICATION  CERVICAL CANCER RISK ASSESSMENT WITH EXPLAINABLE ML (SHAP)
-
 # 🩺 Application d'Aide à la Décision Médicale - Évaluation du Risque de Cancer du Col de l'Utérus
 
 Ce projet est réalisé dans le cadre de la Coding Week. Il s'agit d'un outil d'aide à la décision clinique permettant d'évaluer le risque de cancer du col de l'utérus chez les patientes en fonction de leurs antécédents médicaux et de leurs facteurs comportementaux. Notre outil se base des modèles de Machine Learning (Random Forest, XGBoost, CatBoost), avec une explicabilité assurée par SHAP.
 
-**Équipe :** Bakayoko Mouhamed Soualiou
-Diallo Ismaila;
-Gbatta Jovite Jean-Paul (jovitejeanpaul);
-Mounirou Kouadio Kobenan Habib (Mounirou-H-ops);
-Ouattara El Hadj Sinali;
+**Équipe :** Bakayoko Mouhamed Soualiou (BakMomos);Diallo Ismaila(dialloismaila256messi-gif); Gbatta Jovite Jean-Paul(jovitejeanpaul); Mounirou Kouadio Kobenan Habib(); Ouattara El Hadj Sinali(sinalihassane-svg);
 
 **Objectifs du projet :**
 - Développez un modèle d'apprentissage automatique robuste et explicable.
