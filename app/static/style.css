@@ -1,113 +1,158 @@
-:root {
-    --primary-red: #f1646e;
-    --glass-bg: rgba(255, 255, 255, 0.05);
+/* ===== RESET & BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background: url('/static/cancer.jfif') no-repeat center center fixed; /* Correction chemin image */
-    background-size: cover;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
+    background-image: url('/static/Cancer.jfif');
+    image-rendering: high-quality;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-/* --- LE SECRET EST ICI --- */
-.step {
-    display: none; /* 1. On cache TOUTES les étapes par défaut */
+/* Overlay rose sur le fond */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 182, 193, 0.15);
+    z-index: 0;
 }
 
-.step.active {
-    display: flex; /* 2. On affiche SEULEMENT celle qui a la classe 'active' */
-    flex-direction: column;
-    align-items: stretch;
-    text-align: left;
-    animation: fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-/* ------------------------- */
-
-.header-unini {
-    padding: 40px 10% 20px;
-    color: #2c3e50;
-    text-align: center;
-}
-
+/* ===== CONTENEUR PRINCIPAL (GLASSMORPHISM) ===== */
 .glass-container {
-    background: var(--glass-bg);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 40px; /* Arrondi complet pour l'effet capsule */
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     padding: 40px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 520px;
 }
 
+/* ===== BARRE DE PROGRESSION ===== */
 .progress-container {
-    width: 100%;
-    height: 8px;
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 123, 255, 0.1);
     border-radius: 10px;
+    height: 6px;
     margin-bottom: 30px;
     overflow: hidden;
 }
 
 .progress-bar {
-    width: 0%;
     height: 100%;
-    background: var(--primary-red);
+    background: linear-gradient(90deg, #ff6b9d, #007bff);
+    border-radius: 10px;
+    width: 0%;
     transition: width 0.4s ease;
 }
 
-.form-group label {
+/* ===== ÉTAPES ===== */
+.step {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.step.active {
     display: block;
-    margin: 15px 0 8px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== FORMULAIRE ===== */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
     font-weight: 600;
-    color: #333;
+    color: #444;
+    font-size: 0.95rem;
 }
 
-input, select {
-    width: 100%;
-    padding: 12px 15px;
+.form-group input,
+.form-group select {
+    padding: 12px 16px;
+    border: 1.5px solid rgba(0, 123, 255, 0.25);
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.8);
-    background: rgba(255,255,255,0.7);
+    background: rgba(255, 255, 255, 0.8);
     font-size: 1rem;
-    box-sizing: border-box;
+    color: #333;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
 }
 
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
+}
+
+/* ===== BOUTONS ===== */
 .btn-group {
     display: flex;
-    gap: 15px;
-    margin-top: 30px;
-    justify-content: center;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 10px;
 }
 
 .btn-main {
-    background: var(--primary-red);
+    background: linear-gradient(135deg, #007bff, #0056d2);
     color: white;
     border: none;
-    padding: 15px 35px;
-    border-radius: 30px;
-    font-weight: bold;
+    padding: 12px 28px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(241, 100, 110, 0.3);
-    transition: 0.3s;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.btn-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.35);
 }
 
 .btn-secondary {
-    background: rgba(0, 0, 0, 0.1);
-    border: none;
-    padding: 15px 35px;
-    border-radius: 30px;
+    background: transparent;
+    color: #007bff;
+    border: 1.5px solid #007bff;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 123, 255, 0.08);
+}
+
+/* ===== RÉSULTAT ===== */
+.result-box {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid rgba(0, 123, 255, 0.2);
 }
