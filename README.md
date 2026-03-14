@@ -6,10 +6,10 @@
 Ce projet est réalisé dans le cadre de la Coding Week. Il s'agit d'un outil d'aide à la décision clinique permettant d'évaluer le risque de cancer du col de l'utérus chez les patientes en fonction de leurs antécédents médicaux et de leurs facteurs comportementaux. Notre outil se base des modèles de Machine Learning (Random Forest, XGBoost, CatBoost), avec une explicabilité assurée par SHAP.
 
 **Équipe :** Bakayoko Mouhamed Soualiou
-Diallo Ismaila
-Gbatta Jovite Jean-Paul
-Mounirou Kouadio Kobenan Habib (Mounirou-H-ops)
-Ouattara El Hadj Sinali
+Diallo Ismaila;
+Gbatta Jovite Jean-Paul (jovitejeanpaul);
+Mounirou Kouadio Kobenan Habib (Mounirou-H-ops);
+Ouattara El Hadj Sinali;
 
 **Objectifs du projet :**
 - Développez un modèle d'apprentissage automatique robuste et explicable.
