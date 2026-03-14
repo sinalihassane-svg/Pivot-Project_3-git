@@ -8,7 +8,7 @@ app = Flask(__name__)
 # --- CHARGEMENT UNIQUE DU MODÈLE CATBOOST ---
 # On construit le chemin vers le fichier .cbm
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(BASE_DIR, '..', 'src', 'modele_cancer_final.cbm')
+model_path = os.path.join(BASE_DIR, '..', 'modele_cancer_final.cbm')
 
 model = CatBoostClassifier()
 model.load_model(model_path)

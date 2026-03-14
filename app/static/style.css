@@ -8,7 +8,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
-    background-image: url('/static/cancer.jfif') no-repeat center center fixed;
+    background-image: url('/static/Cancer.jfif') ;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
