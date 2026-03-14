@@ -1,14 +1,20 @@
 from flask import Flask, render_template, request
-import pickle
 import numpy as np
-# Charger le modèle Random Forest déjà présent dans votre dossier src
-model_path = 'src/random_forest_model.pkl'
-with open(model_path, 'rb') as f:
-    model = pickle.load(f)
+import os
+from catboost import CatBoostClassifier
+
 app = Flask(__name__)
 
+# --- CHARGEMENT UNIQUE DU MODÈLE CATBOOST ---
+# On construit le chemin vers le fichier .cbm
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, '..', 'src', 'modele_cancer_final.cbm')
 
+model = CatBoostClassifier()
+model.load_model(model_path)
+# 3. LES ROUTES VIENNENT APRÈS
 @app.route('/', methods=['GET', 'POST'])
+
 def index():
     prediction = None  # On garde cette ligne pour initialiser la variable
 
@@ -27,15 +33,18 @@ def index():
                 float(request.form.get('cancer_prev', 0))
             ]
 
-            # 2. Transformation pour l'algorithme
-            features = np.array([data])
-
-            # 3. Prédiction avec le modèle chargé
-            prediction_value = model.predict(features)[0]
+            # 2. Transformation pour l'algorithme (On passe de 9 à 28 colonnes)
+            features_full = np.zeros((1, 28)) 
+        
+            # On place tes 9 données dans les 9 premières colonnes
+            features_full[0, 0:9] = data 
+        
+            # 3. Prédiction avec le tableau complet
+            prediction_value = model.predict(features_full)[0]
             
             # 4. On écrase le 'None' par le vrai message
             if prediction_value == 1:
-                prediction = "Risque élevé détecté. Veuillez consulter un spécialiste."
+                prediction = "Risque élevé détecté."
             else:
                 prediction = "Faible risque détecté."
         

@@ -8,102 +8,114 @@
 <body>
 
     <div class="glass-container">
-        <!-- Barre de progression -->
+        <header style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid rgba(0, 123, 255, 0.2); padding-bottom: 15px;">
+            <h1 style="color: #007bff; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">
+                Application d'aide à la décision médicale
+            </h1>
+            <h2 style="color: #333; font-size: 1.1rem; font-weight: 500;">
+                Évaluation du risque de cancer du col de l'utérus
+            </h2>
+    </header>
         <div class="progress-container">
             <div class="progress-bar" id="progress-bar"></div>
         </div>
 
-        <form id="quiz-form" action="/" method="POST">
-            
-            <!-- ÉTAPE 1 : Âge -->
-            <div class="step active" id="step-1">
-                <div class="form-group">
-                    <label>Âge de la patiente</label>
-                    <input type="number" name="age" placeholder="ex: 25" min="12" max="200" required>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn-main" onclick="goToStep(2)">Suivant</button>
-                </div>
+        {% if prediction and request.method == 'POST' %}
+            <div class="result-box" style="text-align: center; animation: fadeIn 0.5s ease;">
+                <h2 style="color: #007bff; margin-bottom: 10px;">Résultat du Diagnostic</h2>
+                <p style="font-size: 1.2rem; font-weight: bold; color: #333;">{{ prediction }}</p>
+                <a href="/" class="btn-main" style="display: inline-block; margin-top: 20px; text-decoration: none; padding: 10px 20px; background-color: #ff7675; color: white; border-radius: 25px;">Refaire un test</a>
             </div>
+        {% else %}
+            <form id="quiz-form" action="/" method="POST">
+                
+                <div class="step active" id="step-1">
+                    <div class="form-group">
+                        <label>Âge de la patiente</label>
+                        <input type="number" name="age" placeholder="ex: 25" min="12" max="200" required>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn-main" onclick="goToStep(2)">Suivant</button>
+                    </div>
+                </div>
 
-            <!-- ÉTAPE 2 : Tabac -->
-            <div class="step" id="step-2">
-                <div class="form-group">
-                    <label>Consommation de tabac</label>
-                    <select name="smokes">
-                        <option value="0">Non-fumeuse</option>
-                        <option value="1">Fumeuse</option>
-                    </select>
-                    <label style="margin-top:15px; font-size: 0.8rem; color: rgb(0, 0, 0);">Si oui, depuis combien d'années ?</label>
-                    <input type="number" name="smokes_years" min="0" value="0">
+                <div class="step" id="step-2">
+                    <div class="form-group">
+                        <label>Consommation de tabac</label>
+                        <select name="smokes">
+                            <option value="0">Non-fumeuse</option>
+                            <option value="1">Fumeuse</option>
+                        </select>
+                        <label style="margin-top:15px; font-size: 0.8rem; color: #333;">Si oui, depuis combien d'années ?</label>
+                        <input type="number" name="smokes_years" min="0" value="0">
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn-secondary" onclick="goToStep(1)">Retour</button>
+                        <button type="button" class="btn-main" onclick="goToStep(3)">Suivant</button>
+                    </div>
                 </div>
-                <div class="btn-group">
-                    <button type="button" class="btn-secondary" onclick="goToStep(1)">Retour</button>
-                    <button type="button" class="btn-main" onclick="goToStep(3)">Suivant</button>
-                </div>
-            </div>
 
-            <!-- ÉTAPE 3 : Partenaires & Grossesses -->
-            <div class="step" id="step-3">
-                <div class="form-group">
-                    <label>Nombre de partenaires sexuels</label>
-                    <input type="number" name="partners" placeholder="ex: 1" required>
-                    <label style="margin-top:15px;">Nombre de grossesses</label>
-                    <input type="number" name="pregnancies" placeholder="ex: 0" required>
-                    <label>Âge du premier rapport sexuel</label>
-                    <input type="number" name="first_intercourse" placeholder="ex: 18" required>
+                <div class="step" id="step-3">
+                    <div class="form-group">
+                        <label>Nombre de partenaires sexuels</label>
+                        <input type="number" name="partners" placeholder="ex: 1" required>
+                        <label style="margin-top:15px;">Nombre de grossesses</label>
+                        <input type="number" name="pregnancies" placeholder="ex: 0" required>
+                        <label style="margin-top:15px;">Âge du premier rapport sexuel</label>
+                        <input type="number" name="first_intercourse" placeholder="ex: 18" required>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn-secondary" onclick="goToStep(2)">Retour</button>
+                        <button type="button" class="btn-main" onclick="goToStep(4)">Suivant</button>
+                    </div>
                 </div>
-                <div class="btn-group">
-                    <button type="button" class="btn-secondary" onclick="goToStep(2)">Retour</button>
-                    <button type="button" class="btn-main" onclick="goToStep(4)">Suivant</button>
-                </div>
-            </div>
 
-            <!-- ÉTAPE 4 : Santé & Antécédents -->
-            <div class="step" id="step-4">
-                <div class="form-group">
-                    <label>Années sous contraceptifs hormonaux</label>
-                    <input type="number" name="hormonal_years" value="0">
-                    <label style="margin-top:15px;">Diagnostic MST précédent ?</label>
-                    <select name="stds">
-                        <option value="0">Aucun</option>
-                        <option value="1">Oui</option>
-                    </select>
+                <div class="step" id="step-4">
+                    <div class="form-group">
+                        <label>Années sous contraceptifs hormonaux</label>
+                        <input type="number" name="hormonal_years" value="0">
+                        <label style="margin-top:15px;">Diagnostic MST précédent ?</label>
+                        <select name="stds">
+                            <option value="0">Aucun</option>
+                            <option value="1">Oui</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn-secondary" onclick="goToStep(3)">Retour</button>
+                        <button type="button" class="btn-main" onclick="goToStep(5)">Suivant</button>
+                    </div>
                 </div>
-                <div class="btn-group">
-                    <button type="button" class="btn-secondary" onclick="goToStep(3)">Retour</button>
-                    <button type="button" class="btn-main" onclick="goToStep(5)">Suivant</button>
-                </div>
-            </div>
 
-            <!-- ÉTAPE 5 : Final -->
-            <div class="step" id="step-5">
-                <div class="form-group">
-                    <label>Avez-vous déjà eu un diagnostic de Cancer ?</label>
-                    <select name="cancer_prev">
-                        <option value="0">Non</option>
-                        <option value="1">Oui</option>
-                    </select>
+                <div class="step" id="step-5">
+                    <div class="form-group">
+                        <label>La patiente a-t-elle des antécédents de cancer ?</label>
+                        <select name="cancer_prev">
+                            <option value="0">Non</option>
+                            <option value="1">Oui</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn-secondary" onclick="goToStep(4)">Retour</button>
+                        <button type="submit" class="btn-main">LANCER LE DIAGNOSTIC FINAL</button>
+                    </div>
                 </div>
-                <div class="btn-group">
-                    <button type="button" class="btn-secondary" onclick="goToStep(4)">Retour</button>
-                    <button type="submit" class="btn-main">LANCER LE DIAGNOSTIC FINAL</button>
-                </div>
-            </div>
 
-        </form>
+            </form>
+        {% endif %}
     </div>
 
     <script>
         function goToStep(stepNumber) {
-            // Cacher toutes les étapes
+            // Masque toutes les étapes
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            // Afficher l'étape actuelle
-            document.getElementById('step-' + stepNumber).classList.add('active');
+            // Affiche l'étape demandée
+            const targetStep = document.getElementById('step-' + stepNumber);
+            if (targetStep) targetStep.classList.add('active');
             
-            // Calculer la progression (5 étapes)
+            // Mise à jour de la barre (5 étapes au total)
             const progress = ((stepNumber - 1) / 4) * 100;
-            document.getElementById('progress-bar').style.width = progress + '%';
+            const bar = document.getElementById('progress-bar');
+            if (bar) bar.style.width = progress + '%';
         }
     </script>
 </body>

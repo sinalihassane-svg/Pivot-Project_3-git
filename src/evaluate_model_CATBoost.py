@@ -16,7 +16,6 @@ model_cat.load_model("modele_cancer_final.cbm")
 print("Modèle chargé et prêt pour l'évaluation.")
 # 3. Évaluation
 y_pred = model_cat.predict(X_test_final)
-
 print("\n" + "="*40)
 print("   RAPPORT DE PERFORMANCE")
 print("="*40)
@@ -70,3 +69,4 @@ plt.title("Courbe ROC - Capacité de discrimination du modèle")
 plt.legend(loc="lower right")
 plt.grid(alpha=0.3)
 plt.show()
+plt.savefig("evaluation_CATBoost_dashboard.png")

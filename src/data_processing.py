@@ -6,6 +6,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # 1. Récupération de la base de données
 chemin = r"C:\Cycle Ingénieur\1A\S6\GitHub\Pivot-Project_3-git\data\risk_factors_cervical_cancer.csv"
@@ -72,4 +74,49 @@ else:
 scaler = StandardScaler()
 X_train_final = pd.DataFrame(scaler.fit_transform(X_train_balanced), columns=X_train_imputed.columns)
 X_test_final = pd.DataFrame(scaler.transform(X_test_imputed), columns=X_test_imputed.columns)
+
+
+
+# --- AJOUT DES VISUALISATIONS (SAUVEGARDE EN PNG) ---
+import os
+
+# Création d'un dossier dynamique "images" à la racine de ton projet
+# __file__ pointe sur src/data_processing.py, donc on remonte d'un cran
+dossier_actuel = os.path.dirname(os.path.abspath(__file__))
+dossier_racine = os.path.dirname(dossier_actuel)
+dossier_images = os.path.join(dossier_racine, "images")
+os.makedirs(dossier_images, exist_ok=True)
+
+# 10. Visualisation des proportions de classes (Avant / Après SMOTE)
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+# Graphique 1 : Avant la gestion du déséquilibre
+axes[0].pie(y_train.value_counts(), labels=["Sans risque (0)", "À risque (1)"], autopct='%1.1f%%', startangle=90, colors=['#66b3ff','#ff9999'])
+axes[0].set_title("Proportion des classes AVANT SMOTE")
+
+# Graphique 2 : Après la gestion du déséquilibre
+axes[1].pie(y_train_balanced.value_counts(), labels=["Sans risque (0)", "À risque (1)"], autopct='%1.1f%%', startangle=90, colors=['#66b3ff','#ff9999'])
+axes[1].set_title("Proportion des classes APRÈS SMOTE")
+
+plt.tight_layout()
+
+# Sauvegarde au lieu de l'affichage
+chemin_pie = os.path.join(dossier_images, "proportion_classes_smote.png")
+plt.savefig(chemin_pie, bbox_inches='tight', dpi=300)
+plt.close() # Libère la mémoire
+print(f"Graphique des proportions sauvegardé ici : {chemin_pie}")
+
+
+# 11. Visualisation de la matrice de corrélation
+plt.figure(figsize=(12, 10))
+sns.heatmap(X_train_imputed.corr(), annot=False, cmap='coolwarm', linewidths=0.5)
+plt.title("Matrice de corrélation des caractéristiques")
+
+# Sauvegarde au lieu de l'affichage
+chemin_heatmap = os.path.join(dossier_images, "matrice_correlation.png")
+plt.savefig(chemin_heatmap, bbox_inches='tight', dpi=300)
+plt.close() # Libère la mémoire
+print(f"Graphique de corrélation sauvegardé ici : {chemin_heatmap}")
+
+
 # %%

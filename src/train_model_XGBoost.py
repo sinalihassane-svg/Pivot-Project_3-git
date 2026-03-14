@@ -1,5 +1,8 @@
 from xgboost import XGBClassifier
+import joblib
+import os
 from data_processing import X_train_final, y_train_balanced
+import joblib
 # Initialisation du modèle XGBoost
 # On définit eval_metric pour éviter les avertissements de dépréciation
 model = XGBClassifier(
@@ -14,4 +17,6 @@ model = XGBClassifier(
 # Entraînement sur les données prétraitées et équilibrées
 model.fit(X_train_final, y_train_balanced)
 
-print("Modèle XGBoost entraîné avec succès.")
+# Sauvegarde du modèle
+joblib.dump(model, "XGBoost_model.pkl")
+print("Modèle entraîné et sauvegardé sous 'XGBoost_model.pkl'")
