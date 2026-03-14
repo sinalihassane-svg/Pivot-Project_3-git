@@ -86,18 +86,24 @@ L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants o
 
 ### Modèle Random Forest Classifier
 #### Performances
-* Accuracy : 96%
-* Précision :
-* Rappel (Recall) pour la classe À risque : 64%
-* F1-Score  Pour la classe risque: 67%
-* ROC-AUC : 
+* Accuracy : 96.8%
+* Précision : 62.5%
+* Rappel (Recall) pour la classe À risque : 45.5%
+* F1-Score  Pour la classe risque: 52.6%
+* ROC-AUC : 0.9684
+
 #### Quelles caractéristiques médicales ont le plus influencé les prédictions (Résultats SHAP) ?
 
 L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants ont le plus fort impact sur la probabilité de risque :
 
-1. L'âge
-2. Le nombre de grossesses (Num of pregnancies)
-3.  Le temps de tabagisme (Smokes (years))
+1. Schiller
+2. Hinselmann
+3. Citoly
+4. Dx
+5. Hormonal contraceptive
+6. STDs
+7. Dx : Cancer
+
 
 
 
