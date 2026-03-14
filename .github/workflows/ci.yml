@@ -23,7 +23,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         run: |
-          pip install flask catboost numpy pandas scikit-learn pytest
+          pip install -r requirements.txt
 
     - name: Run tests
       run: |
