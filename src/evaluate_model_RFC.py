@@ -51,7 +51,7 @@ plt.rcParams.update({
 # ── Chargement & prédictions ─────────────────────────────────────────────────
 MODEL_PATH   = os.path.join(DIR_SRC, "random_forest_model.pkl")
 rf_model     = joblib.load(MODEL_PATH)
-y_pred       = rf_model.predict(X_test_final)
+y_pred = (rf_model.predict_proba(X_test_final)[:, 1] >= 0.3).astype(int)
 y_pred_proba = rf_model.predict_proba(X_test_final)[:, 1]
 
 metrics = {
