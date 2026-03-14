@@ -8,7 +8,8 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
-    background-image: url('/static/Cancer.jfif') ;
+    background-image: url('/static/Cancer.jfif');
+    image-rendering: high-quality;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -23,7 +24,7 @@ body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(255, 182, 193, 0.55);
+    background: rgba(255, 182, 193, 0.15);
     z-index: 0;
 }
 
@@ -31,9 +32,9 @@ body::before {
 .glass-container {
     position: relative;
     z-index: 1;
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.6);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
