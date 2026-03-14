@@ -53,19 +53,26 @@ Le jeu de données initial présentait un déséquilibre majeur (~85% de cas "Sa
 
 ### Quel modèle de Machine Learning a obtenu les meilleures performances ?
 
-Parmi les modèles testés, le modèle **[Nom du modèle, ex: XGBoost]** a démontré les meilleures performances sur notre ensemble de test.
+Parmi les modèles testés, le modèle CatBoost classifier a démontré les meilleures performances sur notre ensemble de test.
 
-* Précision (Accuracy) : **[XX]%**
-* Rappel (Recall) pour la classe À risque : **[XX]%**
-* F1-Score : **[XX]%**
+* Précision (Accuracy) : 96%
+* Rappel (Recall) pour la classe À risque : 64%
+* F1-Score  Pour la classe risque: 67%
 
 ### Quelles caractéristiques médicales ont le plus influencé les prédictions (Résultats SHAP) ?
 
 L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants ont le plus fort impact sur la probabilité de risque :
 
-1. **[Ex : L'âge (Age)]**
-2. **[Ex : Le nombre de grossesses (Num of pregnancies)]**
-3. **[Ex : Le temps de tabagisme (Smokes (years))]**
+1. L'âge
+2. Le nombre de grossesses (Num of pregnancies)
+3.  Le temps de tabagisme (Smokes (years))
+
+### XGBOOST CLASSIFIER 
+* précision : **[57.14]%**
+* F1-Score : **[44.44]%**
+* Accuracy : **[94.19]%**
+* recall :**[34.36]%**
+* ROC-AUC: **[0.9554]%**
 
 ### Quels enseignements le "Prompt Engineering" a-t-il apportés à cette tâche ?
 
