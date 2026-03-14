@@ -8,6 +8,14 @@
 <body>
 
     <div class="glass-container">
+        <header style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid rgba(0, 123, 255, 0.2); padding-bottom: 15px;">
+            <h1 style="color: #007bff; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">
+                Application d'aide à la décision médicale
+            </h1>
+            <h2 style="color: #333; font-size: 1.1rem; font-weight: 500;">
+                Évaluation du risque de cancer du col de l'utérus
+            </h2>
+    </header>
         <div class="progress-container">
             <div class="progress-bar" id="progress-bar"></div>
         </div>
@@ -80,7 +88,7 @@
 
                 <div class="step" id="step-5">
                     <div class="form-group">
-                        <label>Avez-vous déjà eu un diagnostic de Cancer ?</label>
+                        <label>La patiente a-t-elle des antécédents de cancer ?</label>
                         <select name="cancer_prev">
                             <option value="0">Non</option>
                             <option value="1">Oui</option>

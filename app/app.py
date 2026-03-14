@@ -1,16 +1,17 @@
 from flask import Flask, render_template, request
-import joblib  # Utilise joblib car ton script d'entraînement l'utilise
 import numpy as np
 import os
+from catboost import CatBoostClassifier
 
-# 1. CRÉER L'APPLICATION D'ABORD
 app = Flask(__name__)
 
-# 2. CHARGER LE MODÈLE ENSUITE
-# On utilise un chemin plus robuste pour éviter les erreurs de dossier
-model_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'random_forest_model.pkl')
-model = joblib.load(model_path)
+# --- CHARGEMENT UNIQUE DU MODÈLE CATBOOST ---
+# On construit le chemin vers le fichier .cbm
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, '..', 'src', 'modele_cancer_final.cbm')
 
+model = CatBoostClassifier()
+model.load_model(model_path)
 # 3. LES ROUTES VIENNENT APRÈS
 @app.route('/', methods=['GET', 'POST'])
 

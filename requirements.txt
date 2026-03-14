@@ -8,3 +8,4 @@ shap
 streamlit
 matplotlib
 seaborn
+pytest
