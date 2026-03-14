@@ -156,7 +156,8 @@ def index():
     return render_template('index.html',
                            prediction=prediction,
                            risk_level=risk_level,
-                           shap_image=shap_image)
+                           shap_image=shap_image,
+                           show_result = True)
 
 
 if __name__ == '__main__':
