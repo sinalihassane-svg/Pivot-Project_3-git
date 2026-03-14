@@ -55,10 +55,10 @@ Le jeu de données initial présentait un déséquilibre majeur (~85% de cas "Sa
 ### Modèle CatBoost Classifier
 #### Performances
 * Accuracy : 96%
-* Précision :
+* Précision :98%(saine),70%(Risque)
 * Rappel (Recall) pour la classe À risque : 64%
 * F1-Score  Pour la classe risque: 67%
-* ROC-AUC : 
+* ROC-AUC : 0,95(95%)
 #### Quelles caractéristiques médicales ont le plus influencé les prédictions (Résultats SHAP) ?
 
 L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants ont le plus fort impact sur la probabilité de risque :
