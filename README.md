@@ -117,9 +117,9 @@ L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants o
 
 L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants ont le plus fort impact sur la probabilité de risque :
 
-1. L'âge
-2. Le nombre de grossesses (Num of pregnancies)
-3.  Le temps de tabagisme (Smokes (years))
+1. Schiller 
+2. Hinselman 
+3.  L'âge 
 
 
 ### Modèle Random Forest Classifier
