@@ -1,16 +1,26 @@
 #%%
 import sys
+import os
 sys.path.append("src")
+
+# ── Chemin vers le dossier images/ ───────────────────────────────────────────
+DIR_SRC    = os.path.dirname(os.path.abspath(__file__))
+DIR_ROOT   = os.path.dirname(DIR_SRC)
+DIR_IMAGES = os.path.join(DIR_ROOT, "images")
+os.makedirs(DIR_IMAGES, exist_ok=True)
+
+def img(filename):
+    """Retourne le chemin complet vers images/filename"""
+    return os.path.join(DIR_IMAGES, filename)
 
 import joblib
 import shap
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
-from matplotlib.patches import FancyBboxPatch
 from data_processing import X_test_final
 
-# ── Palette (cohérente avec le dashboard d'évaluation) ───────────────────────
+# ── Palette ───────────────────────────────────────────────────────────────────
 BG     = "#0D1117"
 CARD   = "#161B22"
 BORDER = "#21262D"
@@ -35,10 +45,12 @@ plt.rcParams.update({
 })
 
 # ── Chargement & SHAP ────────────────────────────────────────────────────────
-rf_model    = joblib.load("random_forest_model.pkl")
+MODEL_PATH  = os.path.join(DIR_SRC, "random_forest_model.pkl")
+rf_model    = joblib.load(MODEL_PATH)
 explainer   = shap.TreeExplainer(rf_model)
 shap_values = explainer.shap_values(X_test_final)
 
+print(f"Type shap_values : {type(shap_values)}")
 if isinstance(shap_values, list):
     shap_vals = shap_values[1]
 elif isinstance(shap_values, np.ndarray) and shap_values.ndim == 3:
@@ -75,10 +87,9 @@ max_val = top_vals.max()
 for i, (y, v) in enumerate(zip(y_pos, top_vals)):
     ax.barh(y, max_val * 1.05, color=BORDER, height=0.55, zorder=1)
     ratio = v / max_val
-    r = ratio * 0.0   + (1 - ratio) * 0.122
-    g = ratio * 0.788 + (1 - ratio) * 0.435
-    b = ratio * 0.655 + (1 - ratio) * 0.922
-    color = (r, g, b)
+    color = (ratio * 0.0 + (1 - ratio) * 0.122,
+             ratio * 0.788 + (1 - ratio) * 0.435,
+             ratio * 0.655 + (1 - ratio) * 0.922)
     ax.barh(y, v, color=color, height=0.55, zorder=2, alpha=0.92)
     ax.text(v + max_val * 0.015, y, f"{v:.4f}",
             va="center", fontsize=8.5, color=WHITE, fontweight="bold")
@@ -98,9 +109,9 @@ for label, color, x in [("Top 3", TEAL, 0.72), ("Top 7", BLUE, 0.80), ("Autres",
     fig1.text(x, 0.02, f"▌ {label}", color=color, fontsize=8, ha="center")
 
 plt.tight_layout(rect=[0, 0.04, 1, 0.92])
-plt.savefig("shap_importance_bar.png", dpi=150, bbox_inches="tight", facecolor=BG)
+plt.savefig(img("shap_importance_bar.png"), dpi=150, bbox_inches="tight", facecolor=BG)
 plt.show()
-print("✅ Sauvegardé : shap_importance_bar.png")
+print(f"✅ Sauvegardé : {img('shap_importance_bar.png')}")
 
 # ════════════════════════════════════════════════════════════════════════════
 # FIGURE 2 — BEESWARM CUSTOM
@@ -113,17 +124,15 @@ fig2.text(0.5, 0.925,
           ha="center", fontsize=9, color=GREY)
 
 cmap = plt.get_cmap("coolwarm")
-
 np.random.seed(42)
+
 for plot_i, feat_i in enumerate(top_idx):
-    sv     = shap_vals[:, feat_i]
-    fv     = X_arr[:, feat_i]
-    fv_min, fv_max = fv.min(), fv.max()
-    fv_norm = (fv - fv_min) / (fv_max - fv_min + 1e-9)
+    sv      = shap_vals[:, feat_i]
+    fv      = X_arr[:, feat_i]
+    fv_norm = (fv - fv.min()) / (fv.max() - fv.min() + 1e-9)
     jitter  = np.random.uniform(-0.18, 0.18, size=len(sv))
-    colors  = cmap(fv_norm)
-    ax2.scatter(sv, plot_i + jitter, c=colors, s=12, alpha=0.6,
-                linewidths=0, zorder=2)
+    ax2.scatter(sv, plot_i + jitter, c=cmap(fv_norm), s=12,
+                alpha=0.6, linewidths=0, zorder=2)
     ax2.axhline(plot_i, color=BORDER, lw=0.5, zorder=1)
 
 ax2.set_yticks(range(TOP_N))
@@ -135,10 +144,9 @@ ax2.spines[["top", "right", "left"]].set_visible(False)
 ax2.tick_params(axis="y", length=0)
 ax2.xaxis.grid(True, alpha=0.2)
 
-sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(0, 1))
+sm   = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(0, 1))
 sm.set_array([])
-cbar = fig2.colorbar(sm, ax=ax2, orientation="vertical",
-                     fraction=0.02, pad=0.02)
+cbar = fig2.colorbar(sm, ax=ax2, orientation="vertical", fraction=0.02, pad=0.02)
 cbar.set_label("Valeur normalisée de la feature", fontsize=8, color=GREY)
 cbar.ax.yaxis.set_tick_params(color=GREY)
 cbar.outline.set_edgecolor(BORDER)
@@ -147,9 +155,9 @@ cbar.set_ticks([0, 0.5, 1])
 cbar.set_ticklabels(["Faible", "Moyen", "Élevé"])
 
 plt.tight_layout(rect=[0, 0.02, 1, 0.92])
-plt.savefig("shap_beeswarm.png", dpi=150, bbox_inches="tight", facecolor=BG)
+plt.savefig(img("shap_beeswarm.png"), dpi=150, bbox_inches="tight", facecolor=BG)
 plt.show()
-print("✅ Sauvegardé : shap_beeswarm.png")
+print(f"✅ Sauvegardé : {img('shap_beeswarm.png')}")
 
 # ════════════════════════════════════════════════════════════════════════════
 # FIGURE 3 — WATERFALL CUSTOM
@@ -157,16 +165,14 @@ print("✅ Sauvegardé : shap_beeswarm.png")
 idx        = 0    # ← change pour analyser un autre patient
 sv_patient = shap_vals[idx]
 fv_patient = X_arr[idx]
-
-n_show  = min(12, len(feature_names))
-abs_ord = np.argsort(np.abs(sv_patient))[-n_show:][::-1]
-wf_names = [feature_names[i] for i in abs_ord]
-wf_shap  = sv_patient[abs_ord]
-wf_fval  = fv_patient[abs_ord]
+n_show     = min(12, len(feature_names))
+abs_ord    = np.argsort(np.abs(sv_patient))[-n_show:][::-1]
+wf_names   = [feature_names[i] for i in abs_ord]
+wf_shap    = sv_patient[abs_ord]
+wf_fval    = fv_patient[abs_ord]
 prediction = base_val + sv_patient.sum()
 
-# Positions cumulatives (du bas vers le haut = ordre croissant de plot)
-wf_shap_r = wf_shap[::-1]
+wf_shap_r  = wf_shap[::-1]
 lefts      = base_val + np.concatenate([[0], np.cumsum(wf_shap_r[:-1])])
 
 fig3, ax3 = plt.subplots(figsize=(14, 8), facecolor=BG)
@@ -176,7 +182,7 @@ fig3.text(0.5, 0.925,
           f"Prédiction finale : {prediction:.4f}  ·  Base (moyenne) : {base_val:.4f}",
           ha="center", fontsize=9, color=GREY)
 
-y_wf      = np.arange(n_show)
+y_wf       = np.arange(n_show)
 wf_names_r = wf_names[::-1]
 wf_fval_r  = wf_fval[::-1]
 
@@ -184,16 +190,13 @@ for i, (y, sv, left, fname, fval) in enumerate(
         zip(y_wf, wf_shap_r, lefts, wf_names_r, wf_fval_r)):
     color = TEAL if sv > 0 else RED
     ax3.barh(y, sv, left=left, color=color, height=0.55, alpha=0.88, zorder=2)
-
     if i < n_show - 1:
         ax3.plot([left + sv, left + sv], [y + 0.275, y + 0.725],
                  color=BORDER, lw=1, zorder=1)
-
     ha   = "left" if sv > 0 else "right"
     xoff = left + sv + (0.003 if sv > 0 else -0.003)
     ax3.text(xoff, y, f"{sv:+.4f}", va="center", ha=ha,
              fontsize=8, color=color, fontweight="bold")
-
     ax3.text(-0.002, y, f"= {fval:.2f}", va="center", ha="right",
              fontsize=7.5, color=GREY, transform=ax3.get_yaxis_transform())
 
@@ -201,7 +204,6 @@ ax3.axvline(base_val,   color=GREY,   lw=1.2, linestyle=":",  alpha=0.7,
             label=f"Base : {base_val:.4f}")
 ax3.axvline(prediction, color=ORANGE, lw=1.8, linestyle="--", alpha=0.9,
             label=f"Prédiction : {prediction:.4f}")
-
 ax3.set_yticks(y_wf)
 ax3.set_yticklabels(wf_names_r, fontsize=9.5)
 ax3.set_xlabel("Valeur SHAP cumulée", fontsize=10, labelpad=10)
@@ -217,7 +219,7 @@ fig3.text(0.97, 0.50, risk_label, ha="right", va="center",
           fontsize=10, fontweight="bold", color=risk_color, rotation=90)
 
 plt.tight_layout(rect=[0, 0.02, 0.96, 0.92])
-plt.savefig("shap_waterfall.png", dpi=150, bbox_inches="tight", facecolor=BG)
+plt.savefig(img("shap_waterfall.png"), dpi=150, bbox_inches="tight", facecolor=BG)
 plt.show()
-print(f"✅ Sauvegardé : shap_waterfall.png  (patient n°{idx})")
+print(f"✅ Sauvegardé : {img('shap_waterfall.png')}  (patient n°{idx})")
 #%%
