@@ -1,6 +1,6 @@
 # 🩺 Application d'Aide à la Décision Médicale - Évaluation du Risque de Cancer du Col de l'Utérus
 
-Ce projet est réalisé dans le cadre de la Coding Week. Il s'agit d'un outil d'aide à la décision clinique permettant d'évaluer le risque de cancer du col de l'utérus chez les patientes en fonction de leurs antécédents médicaux et de leurs facteurs comportementaux. Notre outil se base des modèles de Machine Learning (Random Forest, XGBoost, CatBoost), avec une explicabilité assurée par SHAP.
+Ce projet est réalisé dans le cadre de la Coding Week. Il s'agit d'un outil d'aide à la décision clinique permettant d'évaluer le risque de cancer du col de l'utérus chez les patientes en fonction de leurs antécédents médicaux et de leurs facteurs comportementaux. Notre outil se base sur des modèles de Machine Learning (Random Forest, XGBoost, CatBoost), avec une explicabilité assurée par SHAP.
 
 **Équipe :** 
 - Bakayoko Mouhamed Soualiou(BakMomoS)
@@ -10,11 +10,11 @@ Ce projet est réalisé dans le cadre de la Coding Week. Il s'agit d'un outil d'
 - Ouattara El Hadj Sinali(sinalihassane-svg)
 
 **Objectifs du projet :**
-- Développez un modèle d'apprentissage automatique robuste et explicable.
-- Garantissez la transparence des prédictions du modèle grâce à l'explicabilité SHAP.
-- Créez une interface utilisateur intuitive (Streamlit ou Flask).
-- Suivez les bonnes pratiques de développement logiciel (GitHub, CI/CD automatisée).
-- Faites preuve de réactivité en documentant clairement les invites générées par l'IA utilisées dans votre flux de travail.
+- Développer un modèle d'apprentissage automatique robuste et explicable.
+- Garantir la transparence des prédictions du modèle grâce à l'explicabilité SHAP.
+- Créer une interface utilisateur intuitive (Streamlit ou Flask).
+- Suivre les bonnes pratiques de développement logiciel (GitHub, CI/CD automatisée).
+- Faire preuve de réactivité en documentant clairement les invites générées par l'IA utilisées dans votre flux de travail.
 
 
 ```text
@@ -56,9 +56,18 @@ pytest tests/
 
 **3. Entraîner les modèles de Machine Learning :**
 
+**Modèle CatBoost Classifier**
 ```bash
 python src/train_model_CATBoost.py
+
+```
+**Modèle Random Forest Classifier**
+```bash
 python src/train_model_RFC.py
+
+```
+**Modèle XGBoost Classifier**
+```bash
 python src/train_model_XGBoost.py
 
 ```
@@ -73,22 +82,22 @@ python app/app.py
 ## 📊 Traitement des données
 
 ### Gestion des valeurs manquantes
-Pour la gestion des valeurs manquantes, nous avons commencer par supprimer les caractéristiques (colonnes) avec une proportion de valeurs manquantes supérieur ou égale à 60%.
-Nous avons aussi remarqué que certaines des patientes ont très peu de données. Nous avons donc décidé de supprimer de la base de données les patients avec une proportion de valeurs manquantes supérieur ou égale à 60%.
+Pour la gestion des valeurs manquantes, nous avons commencé par supprimer les caractéristiques (colonnes) avec une proportion de valeurs manquantes supérieure ou égale à 60%.
+Nous avons aussi remarqué que certaines des patientes ont très peu de données. Nous avons donc décidé de supprimer de la base de données les patients avec une proportion de valeurs manquantes supérieure ou égale à 60%.
 
 ### Gestion des valeurs aberrantes
 Une valeur aberrante est une observation qui s'éloigne de façon anormale ou extrême des autres valeurs de ta base de données. Elle semble complètement "hors norme" par rapport au comportement général de tes échantillons.
-Pour la détection des valeurs aberrantes, on utilise la méthode IQR(Interquartile Range). Après les avoir détecter, on les supprime de la base de données.
+Pour la détection des valeurs aberrantes, on utilise la méthode IQR(Interquartile Range). Après les avoir détectées, on les supprime de la base de données.
 
 ### Remplacement des valeurs manquantes
-Enfin nous remplaçons les valeurs manquantes restantes après la suppression de certaines colonnes et lignes et celle crées par la suppression des valeurs aberrantes par la médiane de chacune des caractéristiques, calculée uniquement sur la base de données d'entrainement pour éviter un data leakage (si on l'avait calculée sur toute la base de données)
+Enfin nous remplaçons les valeurs manquantes restantes après la suppression de certaines colonnes et lignes et celles créees par la suppression des valeurs aberrantes par la médiane de chacune des caractéristiques, calculée uniquement sur la base de données d'entrainement pour éviter un data leakage (si on l'avait calculée sur toute la base de données)
 
 ### Gestion du déséquilibre
 Le jeu de données initial présentait un déséquilibre majeur (94,8% de cas "Sans risque" contre 5,2% "À risque"). Nous avons appliqué la méthode **SMOTE (Synthetic Minority Over-sampling Technique)** uniquement sur les données d'entraînement.
 **Impact :** Cela a permis de générer des exemples synthétiques pour la classe minoritaire, évitant au modèle de toujours prédire la classe majoritaire et améliorant considérablement sa sensibilité pour la détection des cas à risque.
 
 ### Calcul de la matrice de corrélation
-La matrice de corrélation nous donne à quel point deux caractéristiques différentes donne la même information. Dans le cas, où deux caractéristiques sont fortement corrélées, on en garde qu'une. Voici la liste des caractéristiques que nous avons supprimer:
+La matrice de corrélation nous donne à quel point deux caractéristiques différentes donnent la même information. Dans le cas, où deux caractéristiques sont fortement corrélées, on en garde qu'une. Voici la liste des caractéristiques que nous avons supprimées:
 - STDs (number)
 - STDs: condylomatosis
 - STDs:vulvo-perineal condylomatosis
@@ -127,7 +136,7 @@ La matrice de corrélation nous donne à quel point deux caractéristiques diff�
 - Citology
 
 
-## 🔥 Perfomance des modèles
+## 🔥 Performance des modèles
 ### Modèle CatBoost Classifier
 #### Performances
 * Accuracy : 96%
@@ -185,15 +194,15 @@ L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants o
 
 ## 💻 Quels enseignements le "Prompt Engineering" a-t-il apportés à notre projet ?
 
-Avant la réalisation de ce projet, nos compétences en Prompt Engineering n'était pas mauvaise mais elles n'étaient pas au niveau que nous avons aujourd'hui. Nous rencontrions très souvent du mal à obtenir les reponses que nous attendions de l'IA.
-La Coding Week nous a réellement permis de développement nos compétences en Prompt Enginnering en un lapse de temps très court.
-- Nous avons élargir notre culture scientifique sur les modèles d'IA (LM, LLM, GenIA,..)
+Avant la réalisation de ce projet, nos compétences en Prompt Engineering n'étaient pas mauvaise mais elles n'étaient pas au niveau que nous avons aujourd'hui. Nous avions très souvent du mal à obtenir les réponses que nous attendions de l'IA.
+La Coding Week nous a réellement permis de développer nos compétences en Prompt Enginnering en un laps de temps très court.
+- Nous avons élargi notre culture scientifique sur les modèles d'IA (LM, LLM, GenIA,..)
 - Nous comprenons mieux comment structurer nos prompt (Contexte-Tâche-Contrainte)
-- Nous avons une meilleur connaissance sur la notion de cycle d'itération du prompt
-- Aussi, sachant que les IA cherchent toujours à nous donner une reponse même quand cette reponse n'existe pas (allucination), nous sommes beaucoup plus attentif sur leur reponse.
+- Nous avons une meilleure connaissance sur la notion de cycle d'itération du prompt
+- Aussi, sachant que les IA cherchent toujours à nous donner une reponse même quand cette reponse n'existe pas (hallucination), nous sommes beaucoup plus attentifs à leurs réponses.
 
-Tout au long de ce projet, nous ne nous sommes pas contenter de prompter, nous avons aussi chercher à comprendre les codes que nous obtenions.
-Cela nous a permis de développement une compréhension plus fine sur le Machine Learning notamment:
+Tout au long de ce projet, nous ne nous sommes pas contentés de prompter, nous avons aussi cherché à comprendre les codes que nous obtenions.
+Cela nous a permis de développer une compréhension plus fine sur le Machine Learning notamment:
 - L'utilisation de GitHub 
 - L'optimisation de la mémoire
 - L'exploration des données
