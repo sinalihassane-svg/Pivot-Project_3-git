@@ -79,6 +79,9 @@ python app/app.py
 
 ```
 
+## 🔍 Exploration des données
+L'exploration des données nous a permis de détecter la présence de valeurs manquantes et de valeurs aberrantes dans la base de donnée, ainsi que d'un déséquilibre de la base.
+
 ## 📊 Traitement des données
 
 ### Gestion des valeurs manquantes
@@ -157,7 +160,7 @@ L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants o
 #### Performances
 * Accuracy : 94.19%
 * Précision :57.14%
-* Rappel (Recall) pour la classe À risque : 34.36%
+* Rappel (Recall) pour la classe À risque : 36.36%
 * F1-Score  Pour la classe risque: 44.44%
 * ROC-AUC : 0.9554(95.54%)
 
@@ -185,14 +188,20 @@ L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants o
 1. Schiller
 2. Hinselmann
 3. Citoly
-4. Dx
-5. Hormonal contraceptive
+
 
 
 **Parmi les modèles testés, le modèle CatBoost classifier a démontré les meilleures performances sur notre ensemble de test.**
 
 
-## 💻 Quels enseignements le "Prompt Engineering" a-t-il apportés à notre projet ?
+## 💻 Prompt Engineering
+
+**Tâches réalisées à l'aide de l'IA:**
+- Documentation
+- Génération de code
+- Debogage
+- Gestion des fichiers
+- Création de l'interface web
 
 Avant la réalisation de ce projet, nos compétences en Prompt Engineering n'étaient pas mauvaise mais elles n'étaient pas au niveau que nous avons aujourd'hui. Nous avions très souvent du mal à obtenir les réponses que nous attendions de l'IA.
 La Coding Week nous a réellement permis de développer nos compétences en Prompt Enginnering en un laps de temps très court.
