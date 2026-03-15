@@ -1,6 +1,7 @@
 
 #%%
 import pandas as pd
+import sys
 import os
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -10,9 +11,10 @@ from imblearn.over_sampling import SMOTE
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
-  
+from optimisation_data import optimize_memory
 
 # 1. Récupération de la base de données via l'URL
+
 url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00383/risk_factors_cervical_cancer.csv"
 df = pd.read_csv(url, na_values=["?"])
 
@@ -94,7 +96,7 @@ fig, axes = plt.subplots(1, 2, figsize=(12, 5))
 
 # Graphique 1 : Avant la gestion du déséquilibre
 axes[0].pie(y_train.value_counts(), labels=["Sans risque (0)", "À risque (1)"], autopct='%1.1f%%', startangle=90, colors=['#66b3ff','#ff9999'])
-axes[0].set_title("Proportion des classes AVANT SMOTE")
+axes[0].set_title("Proportion des classes de la base de donnée d'entrainement AVANT SMOTE")
 
 # Graphique 2 : Après la gestion du déséquilibre
 axes[1].pie(y_train_balanced.value_counts(), labels=["Sans risque (0)", "À risque (1)"], autopct='%1.1f%%', startangle=90, colors=['#66b3ff','#ff9999'])
@@ -134,34 +136,4 @@ joblib.dump(scaler, os.path.join(dossier_modeles, 'modele_scaler.pkl'))
 joblib.dump(list(X_train_imputed.columns), os.path.join(dossier_modeles, 'modele_columns.pkl'))
 
 print(f"✅ Scaler sauvegardé avec succès dans : {dossier_modeles}")
-
-
-def optimize_memory(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Optimise la mémoire du DataFrame en ajustant les types de données (ex: float64 -> float32).
-    """
-    start_mem = df.memory_usage().sum() / 1024**2
-    print(f'Mémoire initiale : {start_mem:.2f} MB')
-
-    for col in df.columns:
-        col_type = df[col].dtype
-
-        if col_type != object:
-            c_min = df[col].min()
-            c_max = df[col].max()
-            
-            if str(col_type)[:3] == 'int':
-                if c_min > np.iinfo(np.int8).min and c_max < np.iinfo(np.int8).max:
-                    df[col] = df[col].astype(np.int8)
-                elif c_min > np.iinfo(np.int16).min and c_max < np.iinfo(np.int16).max:
-                    df[col] = df[col].astype(np.int16)
-                elif c_min > np.iinfo(np.int32).min and c_max < np.iinfo(np.int32).max:
-                    df[col] = df[col].astype(np.int32)
-            else:
-                if c_min > np.finfo(np.float32).min and c_max < np.finfo(np.float32).max:
-                    df[col] = df[col].astype(np.float32)
-
-    end_mem = df.memory_usage().sum() / 1024**2
-    print(f'Mémoire finale : {end_mem:.2f} MB')
-    return df
 # %%

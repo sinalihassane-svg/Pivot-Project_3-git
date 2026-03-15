@@ -45,8 +45,16 @@ plt.rcParams.update({
 })
 
 # ── Chargement & SHAP ────────────────────────────────────────────────────────
-MODEL_PATH  = os.path.join(DIR_SRC, "random_forest_model.pkl")
-rf_model    = joblib.load(MODEL_PATH)
+# 1. On définit les chemins dynamiques
+dossier_actuel = os.path.dirname(os.path.abspath(__file__))
+dossier_racine = os.path.dirname(dossier_actuel)
+MODELS_DIR = os.path.join(dossier_racine, "modeles")
+
+MODEL_PATH = os.path.join(MODELS_DIR, 'random_forest_model.pkl')
+
+
+rf_model = joblib.load(MODEL_PATH)
+print(f"✅ Modèle chargé pour SHAP depuis : {MODEL_PATH}")
 explainer   = shap.TreeExplainer(rf_model)
 shap_values = explainer.shap_values(X_test_final)
 

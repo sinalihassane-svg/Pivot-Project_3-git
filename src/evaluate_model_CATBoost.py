@@ -11,15 +11,27 @@ from matplotlib.patches import FancyBboxPatch
 import seaborn as sns
 import warnings
 warnings.filterwarnings('ignore')
+import joblib
+import os
 
 # ─────────────────────────────────────────────
 # 1. Chargement des données et du modèle
 # ─────────────────────────────────────────────
 from data_processing import X_test_final, y_test
 
-model_cat = CatBoostClassifier()
-model_cat.load_model("modele_cancer_final.cbm")
-print("✅ Modèle chargé avec succès.")
+# 1. Configuration du chemin dynamique
+dossier_actuel = os.path.dirname(os.path.abspath(__file__))
+dossier_racine = os.path.dirname(dossier_actuel)
+# Vérifie bien si ton dossier s'appelle 'modeles' ou 'modèles'
+MODELS_DIR = os.path.join(dossier_racine, "modeles") 
+
+# 2. Chargement correct avec joblib
+MODEL_PATH = os.path.join(MODELS_DIR, 'modele_catboost.pkl')
+
+
+model_cat = joblib.load(MODEL_PATH)
+print("✅ Modèle CatBoost chargé avec succès via joblib.")
+
 
 # ─────────────────────────────────────────────
 # 2. Prédictions

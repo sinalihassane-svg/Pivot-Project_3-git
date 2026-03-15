@@ -101,7 +101,7 @@ Pour la détection des valeurs aberrantes, on utilise la méthode IQR(Interquart
 Enfin nous remplaçons les valeurs manquantes restantes après la suppression de certaines colonnes et lignes et celles créees par la suppression des valeurs aberrantes par la médiane de chacune des caractéristiques, calculée uniquement sur la base de données d'entrainement pour éviter un data leakage (si on l'avait calculée sur toute la base de données)
 
 ### Gestion du déséquilibre
-Le jeu de données initial présentait un déséquilibre majeur (94,8% de cas "Sans risque" contre 5,2% "À risque"). Nous avons appliqué la méthode **SMOTE (Synthetic Minority Over-sampling Technique)** uniquement sur les données d'entraînement.
+Le jeu de données initial présentait un déséquilibre majeur (93,6% de cas "Sans risque" contre 6,4% "À risque"). Nous avons appliqué la méthode **SMOTE (Synthetic Minority Over-sampling Technique)** uniquement sur les données d'entraînement.
 **Impact :** Cela a permis de générer des exemples synthétiques pour la classe minoritaire, évitant au modèle de toujours prédire la classe majoritaire et améliorant considérablement sa sensibilité pour la détection des cas à risque.
 
 ### Calcul de la matrice de corrélation
@@ -156,9 +156,9 @@ La matrice de corrélation nous donne à quel point deux caractéristiques diff�
 #### Quelles caractéristiques médicales ont le plus influencé les prédictions (Résultats SHAP) ?
 L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants ont le plus fort impact sur la probabilité de risque :
 
-1. L'âge
-2. Le nombre de grossesses (Num of pregnancies)
-3. Le temps de tabagisme (Smokes (years))
+1. Schiller
+2. Hinselmann
+3. L'âge
 
 
 ### Modèle XGBoost Classifier
@@ -174,7 +174,7 @@ L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants o
 L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants ont le plus fort impact sur la probabilité de risque :
 
 1. Schiller 
-2. Hinselman 
+2. Hinselmann
 3. L'âge 
 
 
