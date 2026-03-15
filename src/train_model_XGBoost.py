@@ -17,6 +17,15 @@ model = XGBClassifier(
 # Entraînement sur les données prétraitées et équilibrées
 model.fit(X_train_final, y_train_balanced)
 
-# Sauvegarde du modèle
-joblib.dump(model, "../modèles/XGBoost_model.pkl")
-print("Modèle entraîné et sauvegardé sous 'XGBoost_model.pkl'")
+
+
+# Création du chemin dynamique sécurisé
+dossier_actuel = os.path.dirname(os.path.abspath(__file__))
+dossier_racine = os.path.dirname(dossier_actuel)
+dossier_modeles = os.path.join(dossier_racine, "modeles") 
+os.makedirs(dossier_modeles, exist_ok=True)
+
+# Sauvegarde
+chemin_sauvegarde = os.path.join(dossier_modeles, "XGBoost_model.pkl")
+joblib.dump(model, chemin_sauvegarde)
+print(f"✅ Modèle XGBoost Classifier sauvegardé sous : {chemin_sauvegarde}")

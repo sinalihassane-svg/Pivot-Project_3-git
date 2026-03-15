@@ -31,7 +31,7 @@ from data_processing import (
 )
 
 # ── Chemin du modèle ──────────────────────────────────────────────────────────
-MODEL_PATH = os.path.join(os.path.dirname(__file__), '..', 'src', 'random_forest_model.pkl')
+MODEL_PATH = os.path.join(os.path.dirname(__file__), '..', 'modeles', 'random_forest_model.pkl')
 
 
 # =============================================================================

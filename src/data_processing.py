@@ -114,19 +114,24 @@ plt.figure(figsize=(12, 10))
 sns.heatmap(X_train_imputed.corr(), annot=False, cmap='coolwarm', linewidths=0.5)
 plt.title("Matrice de corrélation des caractéristiques")
 
-#  Sauvegarde directe dans le dossier images
-chemin_heatmap = os.path.join(dossier_images, "matrice_correlation.png")
-plt.savefig(chemin_heatmap, bbox_inches='tight', dpi=300)
-plt.close() # Libère la mémoire
-print(f"Graphique de corrélation sauvegardé ici : {chemin_heatmap}")
+# Sauvegarde
 
-# À la fin de data_processing.py, ajoutez :
+# 1. Obtenir le chemin absolu du script actuel (le dossier 'src')
+dossier_actuel = os.path.dirname(os.path.abspath(__file__))
 
-# Sauvegarder le scaler
-joblib.dump(scaler, '../modèles/modele_scaler.pkl')
+# 2. Remonter d'un cran pour atteindre la racine du projet
+dossier_racine = os.path.dirname(dossier_actuel)
 
-# Sauvegarder la liste des colonnes retenues après filtrage
-joblib.dump(list(X_train_imputed.columns), '../modèles/modele_colonnes.pkl')
+# 3. Cibler le dossier 'modèles' à la racine
+dossier_modeles = os.path.join(dossier_racine, 'modeles')
 
-print("✅ Scaler et colonnes sauvegardés !")
+# 4. Créer le dossier 'modèles' s'il n'existe pas déjà (évite le FileNotFoundError)
+os.makedirs(dossier_modeles, exist_ok=True)
+
+# 5. Sauvegarder les objets dans le bon dossier
+joblib.dump(scaler, os.path.join(dossier_modeles, 'modele_scaler.pkl'))
+# Si tu sauvegardes aussi tes colonnes, ajoute cette ligne :
+joblib.dump(list(X_train_imputed.columns), os.path.join(dossier_modeles, 'modele_columns.pkl'))
+
+print(f"✅ Scaler sauvegardé avec succès dans : {dossier_modeles}")
 # %%

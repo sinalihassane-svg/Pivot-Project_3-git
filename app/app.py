@@ -13,18 +13,19 @@ import pandas as pd
 app = Flask(__name__)
 
 BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
-MODELS_DIR = os.path.join(BASE_DIR, '..', 'modèles')
+MODELS_DIR = os.path.join(BASE_DIR, '..', 'modeles')
 
 # ── Chargement des 3 modèles ──────────────────────────────────────────────
-model_cat = CatBoostClassifier()
-model_cat.load_model(os.path.join(MODELS_DIR, 'modele_cancer_final.cbm'))
 
+# Attention : On utilise maintenant joblib pour charger les 3 modèles !
+model_cat = joblib.load(os.path.join(MODELS_DIR, 'modele_catboost.pkl'))
 model_rfc = joblib.load(os.path.join(MODELS_DIR, 'random_forest_model.pkl'))
 model_xgb = joblib.load(os.path.join(MODELS_DIR, 'XGBoost_model.pkl'))
 
-# ── Scaler & colonnes (communs aux 3 modèles) ─────────────────────────────
-scaler   = joblib.load(os.path.join(MODELS_DIR, 'modele_scaler.pkl'))
-colonnes = joblib.load(os.path.join(MODELS_DIR, 'modele_colonnes.pkl'))
+# -- Scaler & colonnes (communs aux 3 modèles) -----
+scaler = joblib.load(os.path.join(MODELS_DIR, 'modele_scaler.pkl'))
+colonnes = joblib.load(os.path.join(MODELS_DIR, 'modele_columns.pkl'))
+
 
 FEATURE_NAMES = [
     "Age", "Number of sexual partners", "First sexual intercourse",
