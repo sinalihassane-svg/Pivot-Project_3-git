@@ -22,6 +22,16 @@ model_cat.fit(X_train_final, y_train_balanced)
 # ... (ton code actuel d'entraînement)
 model_cat.fit(X_train_final, y_train_balanced)
 
-# pour sauvegarder le modèle après l'entraînement 
-model_cat.save_model("../modèles/modele_cancer_final.cbm")
-print("Modèle sauvegardé avec succès dans le dossier !")
+import os
+import joblib
+
+# Création du chemin dynamique sécurisé
+dossier_actuel = os.path.dirname(os.path.abspath(__file__))
+dossier_racine = os.path.dirname(dossier_actuel)
+dossier_modeles = os.path.join(dossier_racine, "modeles") 
+os.makedirs(dossier_modeles, exist_ok=True)
+
+# Sauvegarde
+chemin_sauvegarde = os.path.join(dossier_modeles, "modele_catboost.pkl")
+joblib.dump(model_cat, chemin_sauvegarde)
+print(f"✅ Modèle CatBoost Classifier sauvegardé sous : {chemin_sauvegarde}")
