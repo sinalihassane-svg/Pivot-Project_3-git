@@ -156,8 +156,15 @@ def index():
                 }
 
             # ── Consensus (vote majoritaire) ───────────────────────────────
+            # Après le calcul du consensus
             votes_high = sum(1 for r in results.values() if r['pred'] == 1)
             consensus  = 'high' if votes_high >= 2 else 'low'
+
+            return render_template('index.html',
+                                   show_result=show_result,
+                                   results=results,
+                                   consensus=consensus,
+                                   votes_high=votes_high)   # ← AJOUTER
 
         except Exception as e:
             results = {'error': str(e)}

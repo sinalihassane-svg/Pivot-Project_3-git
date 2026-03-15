@@ -58,7 +58,7 @@
                         background:{{ 'rgba(231,76,60,0.08)' if consensus=='high' else 'rgba(39,174,96,0.08)' }};
                         border: 1.5px solid {{ '#e74c3c' if consensus=='high' else '#27ae60' }};">
                 <p style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#888; margin-bottom:4px;">
-                    🗳️ Verdict majoritaire (2 modèles sur 3)
+                    🗳️ Verdict majoritaire ({{ votes_high if consensus=='high' else (3 - votes_high) }} modèles sur 3)
                 </p>
                 <p style="font-size:1.4rem; font-weight:800; color:{{ '#e74c3c' if consensus=='high' else '#27ae60' }};">
                     {{ '⚠️ Risque Élevé' if consensus=='high' else '✅ Faible Risque' }}
