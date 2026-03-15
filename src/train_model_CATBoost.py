@@ -23,5 +23,5 @@ model_cat.fit(X_train_final, y_train_balanced)
 model_cat.fit(X_train_final, y_train_balanced)
 
 # pour sauvegarder le modèle après l'entraînement 
-model_cat.save_model("modele_cancer_final.cbm")
+model_cat.save_model("../modèles/modele_cancer_final.cbm")
 print("Modèle sauvegardé avec succès dans le dossier !")

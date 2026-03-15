@@ -18,5 +18,5 @@ model = XGBClassifier(
 model.fit(X_train_final, y_train_balanced)
 
 # Sauvegarde du modèle
-joblib.dump(model, "XGBoost_model.pkl")
+joblib.dump(model, "../modèles/XGBoost_model.pkl")
 print("Modèle entraîné et sauvegardé sous 'XGBoost_model.pkl'")

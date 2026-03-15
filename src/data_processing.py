@@ -120,11 +120,13 @@ plt.savefig(chemin_heatmap, bbox_inches='tight', dpi=300)
 plt.close() # Libère la mémoire
 print(f"Graphique de corrélation sauvegardé ici : {chemin_heatmap}")
 
-# 12. Sauvegarder le scaler
-joblib.dump(scaler, '../modele_scaler.pkl')
+# À la fin de data_processing.py, ajoutez :
 
-# 13. Sauvegarder la liste des colonnes retenues après filtrage
-joblib.dump(list(X_train_imputed.columns), '../modele_colonnes.pkl')
+# Sauvegarder le scaler
+joblib.dump(scaler, '../modèles/modele_scaler.pkl')
+
+# Sauvegarder la liste des colonnes retenues après filtrage
+joblib.dump(list(X_train_imputed.columns), '../modèles/modele_colonnes.pkl')
 
 print("✅ Scaler et colonnes sauvegardés !")
 # %%
