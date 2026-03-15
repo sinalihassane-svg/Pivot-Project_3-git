@@ -3,14 +3,24 @@ import matplotlib.pyplot as plt
 from catboost import CatBoostClassifier
 import shap
 import os
+import joblib
 
 # 1. On récupère les données (indispensable pour que SHAP puisse comparer les patientes)
 from data_processing import X_test_final
 
 # 2. On charge le modèle que tu as déjà entraîné
-model_cat = CatBoostClassifier()
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-model_cat.load_model(os.path.join(BASE_DIR, '..', 'modèles', 'modele_cancer_final.cbm'))
+# 1. Configuration du chemin dynamique
+dossier_actuel = os.path.dirname(os.path.abspath(__file__))
+dossier_racine = os.path.dirname(dossier_actuel)
+# Vérifie bien si ton dossier s'appelle 'modeles' ou 'modèles'
+MODELS_DIR = os.path.join(dossier_racine, "modeles") 
+
+# 2. Chargement correct avec joblib
+MODEL_PATH = os.path.join(MODELS_DIR, 'modele_catboost.pkl')
+
+
+model_cat = joblib.load(MODEL_PATH)
+print("✅ Modèle CatBoost chargé avec succès via joblib.")
 print("Modèle chargé pour l'analyse SHAP.")
 
 # 3. Création de l'expliqueur SHAP

@@ -49,8 +49,18 @@ plt.rcParams.update({
 })
 
 # ── Chargement & prédictions ─────────────────────────────────────────────────
-MODEL_PATH   = os.path.join(DIR_SRC, "random_forest_model.pkl")
-rf_model     = joblib.load(MODEL_PATH)
+# On pointe vers le dossier à la racine de ton projet
+dossier_actuel = os.path.dirname(os.path.abspath(__file__))
+dossier_racine = os.path.dirname(dossier_actuel)
+
+MODELS_DIR = os.path.join(dossier_racine, "modeles") 
+
+# On définit le chemin complet avec le nom exact de ton fichier
+# (Remplace 'modele_rfc.pkl' par 'random_forest_model.pkl' si c'est son vrai nom dans le dossier)
+MODEL_PATH = os.path.join(MODELS_DIR, 'random_forest_model.pkl')
+
+# Chargement du modèle
+rf_model = joblib.load(MODEL_PATH)
 y_pred = (rf_model.predict_proba(X_test_final)[:, 1] >= 0.3).astype(int)
 y_pred_proba = rf_model.predict_proba(X_test_final)[:, 1]
 

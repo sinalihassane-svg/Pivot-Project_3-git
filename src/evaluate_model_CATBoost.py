@@ -6,6 +6,7 @@ from catboost import CatBoostClassifier
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 import seaborn as sns
+<<<<<<< HEAD
 import datetime
 from data_processing import X_test_final, y_test
 # 1. On réimporte les données nettoyées depuis le fichier de ton ami
@@ -13,6 +14,31 @@ from data_processing import X_test_final, y_test
 
 # 2. On charge le modèle sauvegardé (on crée une boîte vide puis on charge)import os
 from catboost import CatBoostClassifier
+=======
+import warnings
+warnings.filterwarnings('ignore')
+import joblib
+import os
+
+# ─────────────────────────────────────────────
+# 1. Chargement des données et du modèle
+# ─────────────────────────────────────────────
+from data_processing import X_test_final, y_test
+
+# 1. Configuration du chemin dynamique
+dossier_actuel = os.path.dirname(os.path.abspath(__file__))
+dossier_racine = os.path.dirname(dossier_actuel)
+# Vérifie bien si ton dossier s'appelle 'modeles' ou 'modèles'
+MODELS_DIR = os.path.join(dossier_racine, "modeles") 
+
+# 2. Chargement correct avec joblib
+MODEL_PATH = os.path.join(MODELS_DIR, 'modele_catboost.pkl')
+
+
+model_cat = joblib.load(MODEL_PATH)
+print("✅ Modèle CatBoost chargé avec succès via joblib.")
+
+>>>>>>> ae9a17b26d24def0a5f8ecdf137e09fd9b0a74c0
 
 BASE_DIR         = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH       = os.path.normpath(os.path.join(BASE_DIR, "..", "modeles", "modele_catboost.pkl"))
