@@ -25,7 +25,7 @@ Pivot-Project_3-git
 ├── catboost_info/       # Logs et informations générés automatiquement par CatBoost
 ├── data/                # Jeu de données brut (CSV)
 ├── images/              # Visualisations sauvegardées (proportions, corrélations, graphes SHAP)
-├── modèles/             # Modèles d'apprentissage automatique sauvegardés (.pkl)
+├── modeles/             # Modèles d'apprentissage automatique sauvegardés (.pkl)
 ├── notebooks/           # Analyse exploratoire des données (EDA)
 ├── reports/             # Rapports générés
 ├── src/                 # Code source (prétraitement, entraînement, explicabilité)
