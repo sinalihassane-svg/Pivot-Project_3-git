@@ -3,66 +3,60 @@ import numpy as np
 import os
 import shap
 import matplotlib
-matplotlib.use('Agg')  # IMPORTANT : pas d'écran, rendu fichier
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 from catboost import CatBoostClassifier
+import joblib
+import pandas as pd
 
 app = Flask(__name__)
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(BASE_DIR, '..', 'modele_cancer_final.cbm')
+BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
+MODELS_DIR = os.path.join(BASE_DIR, '..', 'modeles')
 
-model = CatBoostClassifier()
-model.load_model(model_path)
+# ── Chargement des 3 modèles ──────────────────────────────────────────────
+
+# Attention : On utilise maintenant joblib pour charger les 3 modèles !
+model_cat = joblib.load(os.path.join(MODELS_DIR, 'modele_catboost.pkl'))
+model_rfc = joblib.load(os.path.join(MODELS_DIR, 'random_forest_model.pkl'))
+model_xgb = joblib.load(os.path.join(MODELS_DIR, 'XGBoost_model.pkl'))
+
+# -- Scaler & colonnes (communs aux 3 modèles) -----
+scaler = joblib.load(os.path.join(MODELS_DIR, 'modele_scaler.pkl'))
+colonnes = joblib.load(os.path.join(MODELS_DIR, 'modele_columns.pkl'))
+
 
 FEATURE_NAMES = [
-    "Âge",
-    "Nb. partenaires sexuels",
-    "1er rapport sexuel (âge)",
-    "Nb. grossesses",
-    "Fumeuse",
-    "Tabac (années)",
-    "Tabac (packs/an)",
-    "Contraceptifs hormonaux",
-    "Contraceptifs (années)",
-    "DIU",
-    "DIU (années)",
-    "MST",
-    "MST: condylomatose cervicale",
-    "MST: condylomatose vaginale",
-    "MST: syphilis",
-    "MST: maladie inflammatoire pelvienne",
-    "MST: herpès génital",
-    "MST: molluscum contagiosum",
-    "MST: SIDA",
-    "MST: VIH",
-    "MST: Hépatite B",
-    "MST: HPV",
-    "Dx: Cancer",
-    "Dx: CIN",
-    "Dx",
-    "Hinselmann",
-    "Schiller",
-    "Cytologie",
+    "Age", "Number of sexual partners", "First sexual intercourse",
+    "Num of pregnancies", "Smokes", "Smokes (years)", "Smokes (packs/year)",
+    "Hormonal Contraceptives", "Hormonal Contraceptives (years)",
+    "IUD", "IUD (years)", "STDs", "STDs:cervical condylomatosis",
+    "STDs:vaginal condylomatosis", "STDs:syphilis",
+    "STDs:pelvic inflammatory disease", "STDs:genital herpes",
+    "STDs:molluscum contagiosum", "STDs:AIDS", "STDs:HIV",
+    "STDs:Hepatitis B", "STDs:HPV", "Dx:Cancer", "Dx:CIN", "Dx",
+    "Hinselmann", "Schiller", "Citology",
 ]
 
-def generate_shap_chart(features_array, save_path):
-    explainer = shap.TreeExplainer(model)
+# ── Génération graphique SHAP ─────────────────────────────────────────────
+def generate_shap_chart(model, features_array, save_path, model_name):
+    explainer  = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(features_array)
 
-    # Compatibilité CatBoost binaire
     if isinstance(shap_values, list):
         sv = shap_values[1][0]
-    elif shap_values.ndim == 3:
+    elif hasattr(shap_values, 'ndim') and shap_values.ndim == 3:
         sv = shap_values[0, :, 1]
     else:
-        sv = shap_values[0]
+        sv = shap_values[0] if hasattr(shap_values, '__len__') else shap_values
 
-    # Top 15 features par impact absolu
-    indices = np.argsort(np.abs(sv))[::-1][:15]
-    top_names  = [FEATURE_NAMES[i] for i in indices]
+    # Noms des colonnes retenues
+    col_names = list(colonnes)
+    indices   = np.argsort(np.abs(sv))[::-1][:15]
+    top_names  = [col_names[i] for i in indices]
     top_values = sv[indices]
-    colors = ['#e74c3c' if v > 0 else '#3498db' for v in top_values]
+    colors     = ['#e74c3c' if v > 0 else '#3498db' for v in top_values]
 
     fig, ax = plt.subplots(figsize=(9, 5))
     fig.patch.set_facecolor('#fdf0f4')
@@ -74,10 +68,9 @@ def generate_shap_chart(features_array, save_path):
     ax.set_yticklabels(top_names[::-1], fontsize=10)
     ax.axvline(0, color='#333', linewidth=0.8, linestyle='--')
     ax.set_xlabel("Impact sur la prédiction (valeur SHAP)", fontsize=10)
-    ax.set_title("Facteurs ayant influencé le diagnostic", fontsize=12,
-                 fontweight='bold', color='#007bff', pad=12)
+    ax.set_title(f"Facteurs influençant le diagnostic — {model_name}",
+                 fontsize=11, fontweight='bold', color='#007bff', pad=12)
 
-    from matplotlib.patches import Patch
     legend_elements = [
         Patch(facecolor='#e74c3c', label='↑ Augmente le risque'),
         Patch(facecolor='#3498db', label='↓ Diminue le risque'),
@@ -95,10 +88,9 @@ def generate_shap_chart(features_array, save_path):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    prediction = None
-    risk_level  = None
-    shap_image  = None
-    show_result = False
+    show_result  = False
+    results      = {}   # contiendra cat / rfc / xgb
+    consensus    = None
 
     if request.method == 'POST':
         show_result = True
@@ -134,30 +126,46 @@ def index():
                 float(request.form.get('citology', 0)),
             ]
 
-            X = np.array(features).reshape(1, -1)
-            result = model.predict(X)[0]
+            X_df     = pd.DataFrame([features], columns=FEATURE_NAMES)
+            X_df     = X_df[colonnes]
+            X_scaled = scaler.transform(X_df)
 
-            if result == 1:
-                prediction = "Risque élevé détecté."
-                risk_level  = "high"
-            else:
-                prediction = "Faible risque détecté."
-                risk_level  = "low"
+            # ── Prédictions 3 modèles ──────────────────────────────────────
+            for key, mdl, name in [
+                ('cat', model_cat, 'CatBoost'),
+                ('rfc', model_rfc, 'Random Forest'),
+                ('xgb', model_xgb, 'XGBoost'),
+            ]:
+                pred  = int(mdl.predict(X_scaled)[0])
+                proba = round(float(mdl.predict_proba(X_scaled)[0][1]) * 100, 1)
 
-            # Génération SHAP → static/shap_result.png
-            shap_filename = 'shap_result.png'
-            shap_path = os.path.join(BASE_DIR, 'static', shap_filename)
-            generate_shap_chart(X, shap_path)
-            shap_image = shap_filename
+                shap_file = f'shap_{key}.png'
+                shap_path = os.path.join(BASE_DIR, 'static', shap_file)
+                try:
+                    generate_shap_chart(mdl, X_scaled, shap_path, name)
+                except Exception:
+                    shap_file = None
+
+                results[key] = {
+                    'name':        name,
+                    'pred':        pred,
+                    'risk_level':  'high' if pred == 1 else 'low',
+                    'risk_percent': proba,
+                    'shap_image':  shap_file,
+                    'label':       'Risque élevé détecté.' if pred == 1 else 'Faible risque détecté.',
+                }
+
+            # ── Consensus (vote majoritaire) ───────────────────────────────
+            votes_high = sum(1 for r in results.values() if r['pred'] == 1)
+            consensus  = 'high' if votes_high >= 2 else 'low'
 
         except Exception as e:
-            prediction = f"Erreur : {str(e)}"
+            results = {'error': str(e)}
 
     return render_template('index.html',
-                           prediction=prediction,
-                           risk_level=risk_level,
-                           shap_image=shap_image,
-                           show_result = True)
+                           show_result=show_result,
+                           results=results,
+                           consensus=consensus)
 
 
 if __name__ == '__main__':

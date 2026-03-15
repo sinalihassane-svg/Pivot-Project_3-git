@@ -76,7 +76,7 @@ output_dir = os.path.join(root_dir, "reports", "metrics")
 os.makedirs(output_dir, exist_ok=True)
 
 # --- ENREGISTREMENT ---
-file_path = os.path.join(output_dir, "evaluation_summary.png")
+file_path = os.path.join(output_dir, "evaluation_XGBoost.png")
 plt.savefig(file_path, dpi=300, bbox_inches='tight')
 print(f"✅ Image enregistrée avec succès dans : {file_path}")
 plt.show()

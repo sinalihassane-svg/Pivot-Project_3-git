@@ -2,13 +2,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from catboost import CatBoostClassifier
 import shap
+import os
 
 # 1. On récupère les données (indispensable pour que SHAP puisse comparer les patientes)
 from data_processing import X_test_final
 
 # 2. On charge le modèle que tu as déjà entraîné
 model_cat = CatBoostClassifier()
-model_cat.load_model("modele_cancer_final.cbm")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_cat.load_model(os.path.join(BASE_DIR, '..', 'modèles', 'modele_cancer_final.cbm'))
 print("Modèle chargé pour l'analyse SHAP.")
 
 # 3. Création de l'expliqueur SHAP
