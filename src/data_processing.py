@@ -123,10 +123,9 @@ print(f"Graphique de corrélation sauvegardé ici : {chemin_heatmap}")
 # À la fin de data_processing.py, ajoutez :
 
 # Sauvegarder le scaler
-joblib.dump(scaler, '../modèles/modele_scaler.pkl')
-
-# Sauvegarder la liste des colonnes retenues après filtrage
-joblib.dump(list(X_train_imputed.columns), '../modèles/modele_colonnes.pkl')
+dossier_modeles = os.path.join(dossier_racine, 'modèles')
+joblib.dump(scaler, os.path.join(dossier_modeles, 'modele_scaler.pkl'))
+joblib.dump(list(X_train_imputed.columns), os.path.join(dossier_modeles, 'modele_colonnes.pkl'))
 
 print("✅ Scaler et colonnes sauvegardés !")
 # %%
