@@ -17,24 +17,25 @@ Ce projet est réalisé dans le cadre de la Coding Week. Il s'agit d'un outil d'
 - Faites preuve de réactivité en documentant clairement les invites générées par l'IA utilisées dans votre flux de travail.
 
 
-## 📂 Structure du Répertoire
-
-📦 Pivot-Project_3-git
- ┣ 📂 .github/          # Configuration pour le pipeline CI/CD (GitHub Actions)
- ┣ 📂 app/              # Interface utilisateur Streamlit
- ┣ 📂 catboost_info/    # Logs et informations générés automatiquement par CatBoost
- ┣ 📂 data/             # Jeu de données brut (CSV)
- ┣ 📂 images/           # Visualisations sauvegardées (proportions, corrélations, graphes SHAP)
- ┣ 📂 modèles/          # Modèles d'apprentissage automatique sauvegardés (.pkl)
- ┣ 📂 notebooks/        # Analyse exploratoire des données (EDA)
- ┣ 📂 reports/          # Rapports générés
- ┣ 📂 src/              # Code source (prétraitement, entraînement des modèles, explicabilité)
- ┣ 📂 tests/            # Scripts de tests unitaires
- ┣ 📜 .gitattributes    # Configuration des attributs Git
- ┣ 📜 .gitignore        # Fichiers et dossiers à ignorer par Git
- ┣ 🐳 Dockerfile        # Configuration pour la conteneurisation de l'application
- ┣ 📖 README.md         # Ce document de présentation
- ┗ 📋 requirements.txt  # Liste des dépendances Python nécessaires au projet
+```text
+Pivot-Project_3-git
+|
+├── .github/             # Configuration pour le pipeline CI/CD (GitHub Actions)
+├── app/                 # Interface utilisateur
+├── catboost_info/       # Logs et informations générés automatiquement par CatBoost
+├── data/                # Jeu de données brut (CSV)
+├── images/              # Visualisations sauvegardées (proportions, corrélations, graphes SHAP)
+├── modèles/             # Modèles d'apprentissage automatique sauvegardés (.pkl)
+├── notebooks/           # Analyse exploratoire des données (EDA)
+├── reports/             # Rapports générés
+├── src/                 # Code source (prétraitement, entraînement, explicabilité)
+├── tests/               # Scripts de tests unitaires
+├── .gitattributes       # Configuration des attributs Git
+├── .gitignore           # Fichiers et dossiers à ignorer par Git
+├── Dockerfile           # Configuration pour la conteneurisation de l'application
+├── README.md            # Ce document de présentation
+└── requirements.txt     # Liste des dépendances Python nécessaires au projet
+```
 
 
 ## ⚙️ Reproductibilité : Installation et Exécution
@@ -140,7 +141,7 @@ L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants o
 
 1. L'âge
 2. Le nombre de grossesses (Num of pregnancies)
-3.  Le temps de tabagisme (Smokes (years))
+3. Le temps de tabagisme (Smokes (years))
 
 
 ### Modèle XGBoost Classifier
@@ -157,7 +158,7 @@ L'utilisation de `TreeExplainer` de SHAP a révélé que les facteurs suivants o
 
 1. Schiller 
 2. Hinselman 
-3.  L'âge 
+3. L'âge 
 
 
 ### Modèle Random Forest Classifier
@@ -190,6 +191,7 @@ La Coding Week nous a réellement permis de développement nos compétences en P
 - Nous comprenons mieux comment structurer nos prompt (Contexte-Tâche-Contrainte)
 - Nous avons une meilleur connaissance sur la notion de cycle d'itération du prompt
 - Aussi, sachant que les IA cherchent toujours à nous donner une reponse même quand cette reponse n'existe pas (allucination), nous sommes beaucoup plus attentif sur leur reponse.
+
 Tout au long de ce projet, nous ne nous sommes pas contenter de prompter, nous avons aussi chercher à comprendre les codes que nous obtenions.
 Cela nous a permis de développement une compréhension plus fine sur le Machine Learning notamment:
 - L'utilisation de GitHub 
@@ -200,5 +202,5 @@ Cela nous a permis de développement une compréhension plus fine sur le Machine
 - L'entrainement des modèles
 - L'évaluation des modèles (les indicateurs de performance ROC-AUC, accuracy, precision, recall et F1-score)
 - L'explicabilité SHAP (Prise de décision des modèles)
-- La création de l'interface wzb (Front-end, Back-end)
+- La création de l'interface web (Front-end, Back-end)
 - L'intégration et le Développement Continus (GitHub Actions)
