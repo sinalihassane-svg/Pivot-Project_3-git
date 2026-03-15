@@ -164,7 +164,7 @@ def index():
                                    show_result=show_result,
                                    results=results,
                                    consensus=consensus,
-                                   votes_high=votes_high)   # ← AJOUTER
+                                   votes_high=votes_high) 
 
         except Exception as e:
             results = {'error': str(e)}
