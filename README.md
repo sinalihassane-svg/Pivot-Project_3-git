@@ -36,14 +36,22 @@ pip install -r requirements.txt
 
 ```
 
-**2. Entraîner les modèles de Machine Learning :**
-
+**2. Lancer les tests :**
 ```bash
-python src/train_model.py
+pytest tests/
 
 ```
 
-**3. Lancer l'application web :**
+**3. Entraîner les modèles de Machine Learning :**
+
+```bash
+python src/train_model_CATBoost.py
+python src/train_model_RFC.py
+python src/train_model_XGBoost.py
+
+```
+
+**4. Lancer l'application web :**
 
 ```bash
 python app/app.py
